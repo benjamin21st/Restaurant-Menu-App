@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+    <title>Restaurants</title>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='vendor/semantic/semantic.css') }}">
+</head>
+<body>
+    <div class="ui button">
+        <i class="icon home"></i>
+        <span><a href="/">Back to homepage</a></span>
+    </div>
+
+    <div class="ui page grid">
+        <div class="sixteen wide column">
+            {% block body %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='vendor/semantic/semantic.js') }}"></script>
+
+</body>
+</html>

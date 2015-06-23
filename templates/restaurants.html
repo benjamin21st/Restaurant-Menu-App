@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="ui secondary pointing menu">
+    <h1>Restaurants</h1>
+</div>
+{% include 'partials/flashed_messages.html' %}
+<div class="create-restaurant-button ui button">
+    <a href="restaurants/new">New restaurant</a>
+</div>
+<div class="ui segment">
+    <div class="ui list">
+        {% for r in context.restaurants %}
+        <div class="ui item">
+            <i class="food icon"></i>
+            <div class="content">
+                <a class="header" href="restaurants/{{ r.id }}">
+                    {{ r.name }}
+                </a>
+                <div class="description">
+                    <span><a href="restaurants/{{ r.id }}/edit">Edit</a></span>
+                    <span><a href="restaurants/{{ r.id }}/delete">Delete</a></span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% with messages = get_flashed_messages() %}
+    <div class="flashed-messages">
+        {% for m in messages %}
+         <div class="ui mini message yellow">{{ m }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="ui hidden divider"></div>
+{% endwith %}

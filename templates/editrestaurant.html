@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="ui secondary pointing menu">
+    <h1>Edit Restaurant</h1>
+</div>
+<div class="ui segment">
+    {% include 'partials/flashed_messages.html' %}
+    <form action="" method="POST" class="ui form">
+        <input placeholder="{{ context.restaurant_name }}" name="restaurant-name"/>
+
+        <div class="ui hidden divider"></div>
+
+        <input type="submit" value="Update" class="ui button blue"/>
+        <a class="ui button" href="{{ url_for('showRestaurants') }}">Cancel</a>
+        <!--<a href="/restaurants">Cancel</a>-->
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="ui secondary pointing menu">
+    <h1>Delete menu item "{{ context.menu_item.name }}"</h1>
+</div>
+<div class="ui segment">
+    <h2>Are you sure?</h2>
+    <form action="" method="POST">
+        <input type="submit" value="Delete" class="ui button red"/>
+        <a class="ui button" href="{{ url_for('showMenu', restaurant_id=context.restaurant.id) }}">Cancel</a>
+    </form>
+</div>
+{% endblock %}

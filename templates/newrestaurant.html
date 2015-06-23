@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="ui secondary pointing menu">
+    <h1>New Restaurants</h1>
+</div>
+<div class="ui segment">
+    <form action="" method="POST" class="ui form">
+        <input placeholder="Name of new restaurant" name="restaurant-name" required="true"/>
+
+        <div class="ui hidden divider"></div>
+
+        <input type="submit" value="Create" class="ui button blue"/>
+        <a class="ui button" href="{{ url_for('showRestaurants') }}">Cancel</a>
+    </form>
+</div>
+{% endblock %}

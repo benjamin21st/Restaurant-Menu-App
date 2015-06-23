@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="ui secondary pointing menu">
+    <h1>Edit Menu Item {{ context.menu_item.name }}</h1>
+</div>
+<div class="ui segment">
+    {% include 'partials/flashed_messages.html' %}
+
+    <form action="" method="POST" class="ui form">
+        <input value="{{ context.menu_item.name }}" name="menu-item-name"/>
+        <input value="{{ context.menu_item.course }}" name="menu-item-course"/>
+        <input value="{{ context.menu_item.price }}" name="menu-item-price"/>
+        <textarea name="menu-item-description">{{ context.menu_item.description }}</textarea>
+
+        <div class="ui hidden divider"></div>
+
+        <input type="submit" value="Update" class="ui button blue"/>
+        <a class="ui button" href="{{ url_for('showMenu', restaurant_id=context.restaurant.id) }}">Cancel</a>
+    </form>
+</div>
+
+<div class="back-button ui button">
+    <a href="{{ url_for('showMenu', restaurant_id=context.restaurant.id) }}">Back to menu item</a>
+</div>
+{% endblock %}
