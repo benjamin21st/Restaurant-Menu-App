@@ -1,14 +1,37 @@
 <!doctype html>
 <html>
 <head>
+    {% block head %}
     <title>Restaurants</title>
+    {% endblock %}
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='vendor/semantic/semantic.css') }}">
+    <style>
+        .ui.button.back-home {
+            position: fixed;
+            right: 120px;
+            top: 0;
+            z-index: 100;
+        }
+
+        .ui.button.sign-out {
+            position: fixed;
+            right: 0;
+            top: 0;
+            z-index: 100;
+        }
+    </style>
 </head>
 <body>
-    <div class="ui button">
+    {% if not context.guest %}
+    <a href="/" class="ui button back-home">
         <i class="icon home"></i>
-        <span><a href="/">Back to homepage</a></span>
-    </div>
+        <span>Back to homepage</span>
+    </a>
+    <a href="/signout" class="ui button sign-out">
+        <i class="icon sign out"></i>
+        <span>Sign out</span>
+    </a>
+    {% endif %}
 
     <div class="ui page grid">
         <div class="sixteen wide column">

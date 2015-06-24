@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>Log in</title>
+<!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
+<style>
+    #result {
+        display: none;
+        text-align: center;
+    }
+</style>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+  </script>
+
+<script src="//apis.google.com/js/platform.js?onload=start"> </script>
+{% endblock %}
+
+{% block body %}
+<!-- GOOGLE PLUS SIGN IN BUTTON-->
+
+<div class="login-area ui segment center aligned">
+    <h2>Log in to edit restaurant or menu info</h2>
+    <div id="signInButton">
+        <span class="g-signin"
+            data-scope="openid email"
+            data-clientid="743459976661-u724s02sd7m12v4cja784n1mcloj1232.apps.googleusercontent.com"
+            data-redirecturi="postmessage"
+            data-accesstype="offline"
+            data-cookiepolicy="single_host_origin"
+            data-callback="signInCallback"
+            data-approvalprompt="force">
+        </span>
+    </div>
+</div>
+
+<div id="result" class="ui segment"></div>
+
+
+
+<!--END GOOGLE PLUS SIGN IN BUTTON -->
+<script>
+
+function signInCallback(authResult) {
+  if (authResult['code']) {
+    // Hide the sign-in button now that the user is authorized
+    $('#signinButton').attr('style', 'display: none');
+    // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+    $.ajax({
+      type: 'POST',
+      url: '/gconnect?state={{ context.state }}',
+      processData: false,
+      data: authResult['code'],
+      contentType: 'application/octet-stream; charset=utf-8',
+      success: function(result) {
+        /*
+            If succeed, hide the sign in area and show results only
+        */
+        $('.login-area').hide();
+        $('#result').show();
+
+        if (result) {
+          $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...');
+          setTimeout(function() {
+            window.location.href = "/";
+          }, 2000);
+
+         } else if (authResult['error']) {
+            console.log('There was an error: ' + authResult['error']);
+         } else {
+            $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+         }
+      }
+
+    });
+  }
+}
+
+</script>
+{% endblock %}

@@ -4,28 +4,33 @@
     <h1>Menu for Restaurant "{{ context.restaurant.name }}"</h1>
 </div>
 {% include 'partials/flashed_messages.html' %}
-<div class="create-new-menu-button ui button">
-    <a href="{{url_for('newMenuItem', restaurant_id=context.restaurant.id )}}">New Menu Item</a>
-</div>
+
+{% if context.restaurant.user_id == context.user_id %}
+<a class="ui button" href="{{url_for('newMenuItem', restaurant_id=context.restaurant.id )}}">New Menu Item</a>
+{% endif %}
+
 <div class="ui segment">
     <div class="ui list">
         {% for r in context.menu_items %}
         <div class="item">
-            <i class="icon spoon"></i>
             <div class="content">
                 <div class="header">
                     <span>{{ r.name }}</span>
                 </div>
                 <div class="description">
-                    <span>{{ r.price }}</span>
-                    <span>{{ r.course }}</span>
-                    <span>{{ r.description }}</span>
+                    <span>$ {{ r.price }}</span>
+                    <span class="ui mini teal tag label">{{ r.course }}</span>
+
+                    {% if r.user_id == context.user_id %}
+                    <div>
+                        <a href="{{ url_for('editMenuItem', restaurant_id=context.restaurant.id, menu_id=r.id) }}">Edit</a>
+                        <a href="{{ url_for('deleteMenuItem', restaurant_id=context.restaurant.id, menu_id=r.id) }}">Delete</a>
+                    </div>
+                    {% endif %}
+
+                    <div class="ui message">{{ r.description }}</div>
                 </div>
 
-                <div>
-                    <a href="{{ url_for('editMenuItem', restaurant_id=context.restaurant.id, menu_id=r.id) }}">Edit</a>
-                    <a href="{{ url_for('deleteMenuItem', restaurant_id=context.restaurant.id, menu_id=r.id) }}">Delete</a>
-                </div>
             </div>
         </div>
         {% endfor %}

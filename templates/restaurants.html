@@ -4,21 +4,24 @@
     <h1>Restaurants</h1>
 </div>
 {% include 'partials/flashed_messages.html' %}
-<div class="create-restaurant-button ui button">
-    <a href="restaurants/new">New restaurant</a>
-</div>
+<a class="ui button" href="restaurants/new">New restaurant</a>
+
 <div class="ui segment">
-    <div class="ui list">
+    <div class="ui five column grid">
         {% for r in context.restaurants %}
-        <div class="ui item">
-            <i class="food icon"></i>
-            <div class="content">
-                <a class="header" href="restaurants/{{ r.id }}">
-                    {{ r.name }}
-                </a>
-                <div class="description">
-                    <span><a href="restaurants/{{ r.id }}/edit">Edit</a></span>
-                    <span><a href="restaurants/{{ r.id }}/delete">Delete</a></span>
+        <div class="ui column">
+            <div class="ui segment">
+                <i class="food icon"></i>
+                <div class="content">
+                    <a class="header" href="restaurants/{{ r.id }}">
+                        {{ r.name }}
+                    </a>
+                    {% if r.user_id == context.user_id %}
+                    <div class="description">
+                        <span><a href="restaurants/{{ r.id }}/edit">Edit</a></span>
+                        <span><a href="restaurants/{{ r.id }}/delete">Delete</a></span>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
