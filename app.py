@@ -1,5 +1,9 @@
 from flask import Flask, render_template, request, make_response, redirect, \
-                  url_for, flash, jsonify, session as login_session
+                  url_for, flash, jsonify, session as login_session, g
+from flask_login import LoginManager, login_user, current_user, logout_user, \
+                  login_required
+
+from functools import wraps
 import random
 import string
 from sqlalchemy import asc
@@ -24,6 +28,23 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 app = Flask(__name__)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+
+@login_manager.user_loader
+def user_loader(u_id):
+    try:
+        return session.query(User).filter_by(id=u_id).one()
+    except:
+        return None
+
+
+@app.before_request
+def before_request():
+    g.user = current_user
 
 
 '''
@@ -119,7 +140,11 @@ def gconnect():
 
     stored_credentials = login_session.get('credentials')
     stored_gplus_id = login_session.get('gplus_id')
-    if stored_credentials is not None and gplus_id == stored_gplus_id:
+    if (stored_credentials is not None
+        and gplus_id == stored_gplus_id
+            and g.user.is_authenticated()):
+        user = User.query.get(login_session['email'])
+        login_user(user)
         response = make_response(
             json.dumps('Current user is already connected.'), 200
             )
@@ -140,6 +165,7 @@ def gconnect():
 
     data = answer.json()
 
+    g.user = data
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
@@ -211,26 +237,32 @@ def signout():
     if 'gplus_id' in login_session:
         gdisconnect()
 
-    return redirect(url_for('login'))
+    logout_user()
+
+    return redirect(url_for('showRestaurants'))
 
 
 @app.route('/')
 @app.route('/restaurants')
+# @login_required
 def showRestaurants():
     restaurants = session.query(Restaurant).order_by(asc(Restaurant.name))
+    if 'username' not in login_session:
+        user_id = None
+    else:
+        user_id = login_session['user_id']
+
     context = {
         'restaurants': restaurants,
-        'user_id': login_session['user_id']
+        'user_id': user_id
     }
 
     return render_template('restaurants.html', context=context)
 
 
 @app.route('/restaurants/new', methods=['GET', 'POST'])
+@login_required
 def createRestaurant():
-    if 'username' not in login_session:
-        return redirect(url_for('login'))
-
     context = {}
 
     if request.method == 'POST':
@@ -255,10 +287,8 @@ def createRestaurant():
 
 
 @app.route('/restaurants/<int:restaurant_id>/edit', methods=['GET', 'POST'])
+@login_required
 def editRestaurant(restaurant_id):
-    if 'username' not in login_session:
-        return redirect(url_for('login'))
-
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
     context = {'restaurant': restaurant}
 
@@ -326,10 +356,15 @@ def showMenu(restaurant_id):
     menu_items = session.query(MenuItem).filter_by(
                                          restaurant_id=restaurant_id).all()
 
+    if 'user_id' in login_session:
+        user_id = login_session['user_id']
+    else:
+        user_id = None
+
     context = {
         'restaurant': restaurant,
         'menu_items': menu_items,
-        'user_id': login_session['user_id']
+        'user_id': user_id
     }
 
     return render_template('menu.html', context=context)
@@ -482,4 +517,5 @@ def getUserID(email):
 if __name__ == '__main__':
     # this wouldn't be here if this is a real world app
     app.secret_key = 'super_key'
+    app.debug = True
     app.run()

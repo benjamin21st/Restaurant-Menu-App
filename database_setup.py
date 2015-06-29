@@ -1,18 +1,32 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
+from flask_login import UserMixin
 
 Base = declarative_base()
 
 
-class User(Base):
+class User(Base, UserMixin):
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     email = Column(String(250), nullable=False)
     picture = Column(String(250))
+    authenticated = Column(Boolean(), default=True)
+
+    def is_authenticated(self):
+        return self.authenticated
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.email
 
     @property
     def serialize(self):
@@ -31,6 +45,8 @@ class Restaurant(Base):
     name = Column(String(250), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
+    menu_items = relationship('MenuItem', backref='restaurant',
+                              cascade="all, delete, delete-orphan")
 
     @property
     def serialize(self):
@@ -51,7 +67,9 @@ class MenuItem(Base):
     price = Column(String(8))
     course = Column(String(250))
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
-    restaurant = relationship(Restaurant)
+    # restaurant = relationship(Restaurant, backref='menu_item',
+    # single_parent = True,
+    #                           cascade="all, delete, delete-orphan")
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
@@ -69,6 +87,5 @@ class MenuItem(Base):
 
 
 engine = create_engine('sqlite:///restaurantmenuwithusers.db')
-
 
 Base.metadata.create_all(engine)

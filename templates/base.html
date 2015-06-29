@@ -19,10 +19,17 @@
             top: 0;
             z-index: 100;
         }
+
+        .ui.button.sign-in {
+            position: fixed;
+            right: 0;
+            top: 0;
+            z-index:100;
+        }
     </style>
 </head>
 <body>
-    {% if not context.guest %}
+    {% if context.user_id %}
     <a href="/" class="ui button back-home">
         <i class="icon home"></i>
         <span>Back to homepage</span>
@@ -30,6 +37,11 @@
     <a href="/signout" class="ui button sign-out">
         <i class="icon sign out"></i>
         <span>Sign out</span>
+    </a>
+    {% else %}
+    <a href="/login" class="ui button sign-in">
+        <i class="icon sign in"></i>
+        <span>Sign in</span>
     </a>
     {% endif %}
 
