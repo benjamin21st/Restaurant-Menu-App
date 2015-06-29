@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, make_response, redirect, \
-                  url_for, flash, jsonify, session as login_session, g
+                  url_for, flash, jsonify, session as login_session, g, abort
 from flask_login import LoginManager, login_user, current_user, logout_user, \
                   login_required
 
@@ -45,6 +45,27 @@ def user_loader(u_id):
 @app.before_request
 def before_request():
     g.user = current_user
+
+
+@app.before_request
+def csrf_protect():
+    if (request.method == 'POST'
+        and 'gconnect' not in request.url
+            and 'gdisconnect' not in request.url):
+        token = login_session.pop('_csrf_token', None)
+        if not token or token != request.form.get('_csrf_token'):
+            abort(403)
+
+
+@app.before_request
+def generate_csrf_token():
+    if login_session:
+        if '_csrf_token' not in login_session:
+            login_session['_csrf_token'] = ''.join(random.choice(string.ascii_uppercase +
+                                      string.digits) for x in range(32))
+
+            app.jinja_env.globals['csrf_token'] = login_session['_csrf_token']
+
 
 
 '''
@@ -262,7 +283,9 @@ def showRestaurants():
 @app.route('/restaurants/new', methods=['GET', 'POST'])
 @login_required
 def createRestaurant():
-    context = {}
+    context = {
+        'user_id': login_session['user_id']
+    }
 
     if request.method == 'POST':
         new_restaurant = Restaurant(name=request.form['restaurant-name'])
@@ -372,7 +395,10 @@ def showMenu(restaurant_id):
 @login_required
 def newMenuItem(restaurant_id):
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
-    context = {'restaurant_id': restaurant_id}
+    context = {
+        'restaurant_id': restaurant_id,
+        'user_id': login_session['user_id']
+    }
 
     if login_session['user_id'] != restaurant.user_id:
         message = 'Sorry, you do not have authorization to create menu \

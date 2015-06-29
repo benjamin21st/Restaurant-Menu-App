@@ -6,6 +6,7 @@
 <div class="ui segment">
     {% include 'partials/flashed_messages.html' %}
     <form action="" method="POST" class="ui form">
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token }}">
         <input value="{{ context.restaurant.name }}" name="restaurant-name"/>
 
         <div class="ui hidden divider"></div>

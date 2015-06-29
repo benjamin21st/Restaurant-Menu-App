@@ -6,6 +6,7 @@
 <div class="ui segment">
     {% include 'partials/flashed_messages.html' %}
     <form action="" method="POST" class="ui form">
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token }}">
         <input placeholder="Name of new menu item" required="true" name="menu-item-name"/>
         <input placeholder="course" name="menu-item-course"/>
         <input placeholder="price" name="menu-item-price"/>

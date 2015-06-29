@@ -7,6 +7,7 @@
     <h2>Are you sure?</h2>
     {% include 'partials/flashed_messages.html' %}
     <form action="" method="POST" class="ui form">
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token }}">
         <input type="submit" value="Delete" class="ui button red"/>
         <a class="ui button" href="{{url_for('showRestaurants')}}">Cancel</a>
     </form>

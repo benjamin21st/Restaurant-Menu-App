@@ -7,6 +7,7 @@
     {% include 'partials/flashed_messages.html' %}
 
     <form action="" method="POST" class="ui form">
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token }}">
         <input value="{{ context.menu_item.name }}" name="menu-item-name"/>
         <input value="{{ context.menu_item.course }}" name="menu-item-course"/>
         <input value="{{ context.menu_item.price }}" name="menu-item-price"/>

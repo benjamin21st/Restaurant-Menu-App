@@ -7,6 +7,10 @@
         display: none;
         text-align: center;
     }
+
+    .ui.button.sign-in {
+        display: none;
+    }
 </style>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
   </script>
@@ -26,8 +30,7 @@
             data-redirecturi="postmessage"
             data-accesstype="offline"
             data-cookiepolicy="single_host_origin"
-            data-callback="signInCallback"
-            data-approvalprompt="force">
+            data-callback="signInCallback">
         </span>
     </div>
 </div>

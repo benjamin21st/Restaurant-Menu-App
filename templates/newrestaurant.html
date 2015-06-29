@@ -5,6 +5,8 @@
 </div>
 <div class="ui segment">
     <form action="" method="POST" class="ui form">
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token }}">
+
         <input placeholder="Name of new restaurant" name="restaurant-name" required="true"/>
 
         <div class="ui hidden divider"></div>
