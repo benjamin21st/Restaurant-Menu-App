@@ -244,7 +244,6 @@ def signout():
 
 @app.route('/')
 @app.route('/restaurants')
-# @login_required
 def showRestaurants():
     restaurants = session.query(Restaurant).order_by(asc(Restaurant.name))
     if 'username' not in login_session:
@@ -320,10 +319,8 @@ def editRestaurant(restaurant_id):
 
 
 @app.route('/restaurants/<int:restaurant_id>/delete', methods=['GET', 'POST'])
+@login_required
 def deleteRestaurant(restaurant_id):
-    if 'username' not in login_session:
-        return redirect(url_for('login'))
-
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
     context = {'restaurant_name': restaurant.name}
 
@@ -372,10 +369,8 @@ def showMenu(restaurant_id):
 
 @app.route('/restaurants/<int:restaurant_id>/menu/new',
            methods=['GET', 'POST'])
+@login_required
 def newMenuItem(restaurant_id):
-    if 'username' not in login_session:
-        return redirect(url_for('login'))
-
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
     context = {'restaurant_id': restaurant_id}
 
@@ -412,10 +407,8 @@ def newMenuItem(restaurant_id):
 
 @app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_id>/edit',
            methods=['GET', 'POST'])
+@login_required
 def editMenuItem(restaurant_id, menu_id):
-    if 'username' not in login_session:
-        return redirect(url_for('login'))
-
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
     menu_item = session.query(MenuItem).filter_by(id=menu_id).one()
 
@@ -454,10 +447,8 @@ def editMenuItem(restaurant_id, menu_id):
 
 @app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_id>/delete',
            methods=['GET', 'POST'])
+@login_required
 def deleteMenuItem(restaurant_id, menu_id):
-    if 'username' not in login_session:
-        return redirect(url_for('login'))
-
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
     menu_item = session.query(MenuItem).filter_by(id=menu_id).one()
 
