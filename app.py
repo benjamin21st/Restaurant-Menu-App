@@ -521,7 +521,4 @@ def getUserID(email):
 
 
 if __name__ == '__main__':
-    # this wouldn't be here if this is a real world app
-    app.secret_key = 'super_key'
-    app.debug = True
     app.run()
