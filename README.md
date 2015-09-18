@@ -1,4 +1,4 @@
-# fullstack_03
+# Restaurant Menu App
 ## Setup Environment
 This web app requires `postgresql` and `Python2.7` as basic system
 requirements. If your system meets these requirements,
